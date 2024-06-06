@@ -115,7 +115,9 @@ def main4():
                 obj = json.loads(line)
                 if i <= limit:
                     print(f"Prompt {i}: {obj["prompt"]["text"]}")
-                    if model_id not in obj or "completion" not in obj[model_id]:
+                    if model_id not in obj:
+                        obj[model_id] = {}
+                    if "completion" not in obj[model_id]:
                         t1 = time.perf_counter()
                         prompt = obj["prompt"]["text"]
                         completion = client.chat.completions.create(
@@ -127,8 +129,7 @@ def main4():
                             ],
                             temperature=0.7,
                         )
-                        if model_id not in obj:
-                            obj[model_id] = {}
+
                         obj[model_id]["completion"] = completion.choices[0].message.content
                         print(f"Answer ({time.perf_counter() - t1:.2f} s): {completion.choices[0].message.content}")
 
