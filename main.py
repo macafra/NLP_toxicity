@@ -158,8 +158,8 @@ def main5():
         objs = []
         with open(f"data/{dataset}_out.jsonl") as f:
             for line in f:
+                obj = json.loads(line)
                 if "toxicity_score" not in obj["prompt"]:
-                    obj = json.loads(line)
                     prompt = obj["prompt"]["text"]
                     tokens = tokenizer(prompt, return_tensors="pt", max_length=512)
                     tokens.to(device)
