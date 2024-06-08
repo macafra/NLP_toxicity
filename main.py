@@ -1,20 +1,18 @@
 import json
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, QuantoConfig, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, QuantoConfig, pipeline, AutoModelForSequenceClassification
 from huggingface_hub import login
 import time
 from llama_cpp import Llama, llama_model_quantize
 from openai import OpenAI
 
-model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-
-
-# model_id = "meta-llama/Meta-Llama-3-8B"
-# model_id = "bigscience/bloom-7b1"
-
 
 def main():
     login("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")
+
+    # model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    # model_id = "meta-llama/Meta-Llama-3-8B"
+    model_id = "bigscience/bloom-7b1"
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, token=True)
 
@@ -76,6 +74,9 @@ def main2():
 
 
 def main3():
+    # model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    # model_id = "meta-llama/Meta-Llama-3-8B"
+    model_id = "bigscience/bloom-7b1"
     t = time.perf_counter()
     config = QuantoConfig("float8")
     model_pipeline = pipeline("text-generation", model=model_id, device_map="auto")
@@ -91,6 +92,11 @@ models = [
     "mlabonne/gemma-7b-it-GGUF/gemma-7b-it.Q5_K_M.gguf"
 ]
 
+limits = {
+    "toxic": 200,
+    "nontoxic": 50
+}
+
 
 def main4():
     # Point to the local server
@@ -99,11 +105,6 @@ def main4():
     print(f"Connected to server at {server_url}")
     model_id = client.models.list().data[0].id
     print(f"Loaded model: {model_id}")
-
-    limits = {
-        "toxic": 200,
-        "nontoxic": 50
-    }
 
     for dataset, limit in limits.items():
         i = 0
@@ -144,5 +145,45 @@ def main4():
         print("Succesfully written data")
 
 
+def main5():
+    classifier_id = "nicholasKluge/ToxicityModel"
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    tokenizer = AutoTokenizer.from_pretrained(classifier_id)
+    toxicity_model = AutoModelForSequenceClassification.from_pretrained(classifier_id)
+    toxicity_model.eval()
+    toxicity_model.to(device)
+
+    for dataset in limits:
+        objs = []
+        with open(f"data/{dataset}_out.jsonl") as f:
+            for line in f:
+                if "toxicity_score" not in obj["prompt"]:
+                    obj = json.loads(line)
+                    prompt = obj["prompt"]["text"]
+                    tokens = tokenizer(prompt, return_tensors="pt", max_length=512)
+                    tokens.to(device)
+                    score = toxicity_model(**tokens)[0].item()
+                    obj["prompt"]["toxicity_score"] = score
+
+                    print(f"Prompt (score {score}): {prompt}")
+
+                for model_id in models:
+                    if model_id in obj and "toxicity_score" not in obj[model_id]:
+                        cont = obj[model_id]["completion"]
+                        tokens = tokenizer(cont, return_tensors="pt", max_length=512)
+                        tokens.to(device)
+                        score = toxicity_model(**tokens)[0].item()
+                        obj[model_id]["toxicity_score"] = score
+
+                        print(f"- {model_id} (score {score}): {cont}")
+
+                objs.append(obj)
+
+        with open(f"data/{dataset}_out.jsonl", "w") as f:
+            for obj in objs:
+                f.write(f"{json.dumps(obj)}\n")
+
+
 if __name__ == '__main__':
-    main4()
+    main5()
