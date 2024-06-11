@@ -29,15 +29,22 @@ def print_negative_scores(file_path):
             data = json.loads(line)
             
             # Check if 'a' key exists and it is a dictionary
-            if model in data and isinstance(data[model], dict):
-                scores = data[model].get('toxicity_score')  # Access the 'scores' key within the 'a' dictionary
-                if scores is not None and isinstance(scores, (int, float)) and scores < 0:
-                    reply = data[model].get('reply')  # Access the 'reply' key within the 'a' dictionary
-                    score = data[model].get('toxicity_score')  # Access the 'reply' key within the 'a' dictionary
+            # if model in data and isinstance(data[model], dict):
+            scores = data['gemma-toxicity_score']  # Access the 'scores' key within the 'a' dictionary
+            if scores is not None and isinstance(scores, (int, float)) and scores < -5:
+                reply = data["google/gemma-7b-it_response_with_system_prompt"]  # Access the 'reply' key within the 'a' dictionary
+                    # score = data[model].get('toxicity_score')  # Access the 'reply' key within the 'a' dictionary
+                if reply is not None:
+                    print("Reply:", reply, "END\n")
+                    # print("Score:", score)
 
-                    if reply is not None:
-                        print("Reply:", reply)
-                        print("Score:", score)
+
+# print_negative_scores('xai/gemma/toxic_out.jsonl')
 
 
-print_negative_scores('data/nontoxic_out.jsonl')
+
+with open("xai/gemma/toxic_out.jsonl") as f:
+  for line in f:
+      obj = json.loads(line)
+      if obj['gemma-toxicity_score_with_system_prompt'] < -7.0:
+          print('\"', obj['google/gemma-7b-it_response_with_system_prompt'], '\"', '\n-------------------------------------')
