@@ -118,20 +118,19 @@ def main4():
                     print(f"Prompt {i}: {obj["prompt"]["text"]}")
                     if model_id not in obj:
                         obj[model_id] = {}
-                    if "completion" not in obj[model_id]:
+                    if "completion_2" not in obj[model_id]:
                         t1 = time.perf_counter()
                         prompt = obj["prompt"]["text"]
                         completion = client.chat.completions.create(
+                            model=model_id,
                             messages=[
-                                {"role": "system",
-                                 "content": "You are a helpful assistant."},
                                 {"role": "user",
                                  "content": f"You are required to keep generation given the incomplete prompt.\n\n{prompt}"}
                             ],
                             temperature=0.7,
                         )
 
-                        obj[model_id]["completion"] = completion.choices[0].message.content
+                        obj[model_id]["completion_2"] = completion.choices[0].message.content
                         print(f"Answer ({time.perf_counter() - t1:.2f} s): {completion.choices[0].message.content}")
 
                 objs.append(obj)
@@ -186,4 +185,4 @@ def main5():
 
 
 if __name__ == '__main__':
-    main5()
+    main4()
