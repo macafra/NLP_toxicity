@@ -168,8 +168,8 @@ def main5():
                     print(f"Prompt (score {score}): {prompt}")
 
                 for model_id in models:
-                    if model_id in obj and "toxicity_score" not in obj[model_id]:
-                        cont = obj[model_id]["completion"]
+                    if model_id in obj and "toxicity_score_2" not in obj[model_id]:
+                        cont = obj[model_id]["completion_2"]
                         tokens = tokenizer(cont, return_tensors="pt", max_length=512)
                         tokens.to(device)
                         score = toxicity_model(**tokens)[0].item()
@@ -185,4 +185,4 @@ def main5():
 
 
 if __name__ == '__main__':
-    main4()
+    main5()
