@@ -1,4 +1,6 @@
 import json
+import os
+
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, QuantoConfig, pipeline, AutoModelForSequenceClassification
 from huggingface_hub import login
@@ -8,7 +10,7 @@ from openai import OpenAI
 
 
 def main():
-    login("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")
+    login(os.environ['HF_TOKEN'])
 
     # model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     # model_id = "meta-llama/Meta-Llama-3-8B"
