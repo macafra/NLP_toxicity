@@ -13,7 +13,7 @@ The Jupiter notebooks for running our experiment can be found in the folder `qua
 
 For running our experiments, we used [Kaggle](https://www.kaggle.com) due to the resources available there (weekly GPU).
 
-Additionally, there is a `lm_studio_setup` in which code is included to run the models with LM Studio. 
+Additionally, in `evaluation_code` is the code for the evaluation and in `lm_studio_setup` is the code to run the models with LM Studio. 
 
 ## File structure
 
