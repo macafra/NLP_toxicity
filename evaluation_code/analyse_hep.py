@@ -109,12 +109,12 @@ statistic, p_value = kruskal(toxic_mistral, toxic_gemma, toxic_llama)
 # statistic, p_value = kruskal(profanity_mistral, profanity_gemma, profanity_llama)
 # statistic, p_value = kruskal(sexual_mistral,sexual_gemma, sexual_llama)
 
-statistic, p_value = kruskal(threat_mistral,threat_gemma, threat_llama)
+statistic, p_value = kruskal(threat_mistral, threat_gemma, threat_llama)
 
 print(statistic, p_value)
 
 
-data = [threat_mistral,threat_gemma, threat_llama]
+data = [threat_mistral, threat_gemma, threat_llama]
 results = posthoc_dunn(data)
 
 print("Dunn's Test Results:")
