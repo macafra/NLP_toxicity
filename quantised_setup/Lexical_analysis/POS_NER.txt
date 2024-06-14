@@ -1,0 +1,81 @@
+       Attribution Score
+count        2529.000000
+mean            3.084553
+std             5.545881
+min           -11.198800
+25%             1.054100
+50%             1.844200
+75%             3.781000
+max            39.013900
+POS
+PUNCT    546
+VERB     427
+NOUN     393
+PRON     309
+PROPN    211
+AUX      103
+ADJ       90
+ADV       89
+ADP       79
+SPACE     69
+PART      52
+NUM       44
+CCONJ     42
+X         24
+INTJ      23
+SCONJ     19
+SYM        5
+DET        4
+Name: count, dtype: int64
+Entity Type
+ORG         48
+PERSON      42
+GPE         32
+CARDINAL    21
+ORDINAL     20
+DATE        16
+LANGUAGE     8
+NORP         6
+LAW          2
+Name: count, dtype: int64
+POS
+ADJ      3.954572
+ADP      1.459161
+ADV      1.893254
+AUX      2.688559
+CCONJ    3.064188
+DET      1.637975
+INTJ     3.034622
+NOUN     3.760212
+NUM      3.630470
+PART     2.846104
+PRON     1.772848
+PROPN    3.796934
+PUNCT    3.276727
+SCONJ    2.991900
+SPACE    3.873259
+SYM      0.718080
+VERB     3.270722
+X        1.305717
+Name: Attribution Score, dtype: float64
+Entity Type
+CARDINAL    2.806900
+DATE        4.946381
+GPE         4.031328
+LANGUAGE    2.790987
+LAW         8.761850
+NORP        3.807233
+ORDINAL     0.908320
+ORG         5.037915
+PERSON      3.789657
+Name: Attribution Score, dtype: float64
+Model
+Gemma       855
+Llama       378
+Mistral    1296
+dtype: int64
+Model
+Gemma      4.434063
+Llama      2.180351
+Mistral    2.457977
+Name: Attribution Score, dtype: float64
